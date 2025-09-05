@@ -61,7 +61,7 @@ double lagrange(double x[], double y[], int n, double xp) {
 }
 
 int main() {
-	const char *nombreArchivo = "ejercicio2-1.txt";
+	const char *nombreArchivo = "ejercicio2-3.txt";
 	double x[MAX], y[MAX];
 	int filas;
 	
