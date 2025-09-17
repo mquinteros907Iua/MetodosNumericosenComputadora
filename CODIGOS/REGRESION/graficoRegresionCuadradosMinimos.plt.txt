@@ -1,0 +1,83 @@
+# ------------------------------------------------------------
+# Script Gnuplot: Visualización de puntos y polinomio de grado n
+# ------------------------------------------------------------
+
+# Configuración de salida
+set terminal pngcairo size 800,600 enhanced font "Arial,12"
+set output "grafico_final.png"
+set grid
+set xlabel "X"
+set ylabel "Y"
+set title "Regresión Polinómica por Mínimos Cuadrados"
+
+# --------------------------
+# Ejes en X=0 y Y=0
+# --------------------------
+set xzeroaxis lw 2 lc rgb "black"
+set yzeroaxis lw 2 lc rgb "black"
+
+# --------------------------
+# Ajuste automático de rangos según los datos
+# --------------------------
+stats "datos.txt" using 1 nooutput
+Xmin = STATS_min
+Xmax = STATS_max
+stats "datos.txt" using 2 nooutput
+Ymin = STATS_min
+Ymax = STATS_max
+
+deltaX = (Xmax - Xmin)*0.05
+deltaY = (Ymax - Ymin)*0.05
+set xrange [Xmin - deltaX : Xmax + deltaX]
+set yrange [Ymin - deltaY : Ymax + deltaY]
+
+# --------------------------
+# Definir grado del polinomio
+# --------------------------
+grado = 1  # <- Cambiar al grado del polinomio
+
+# --------------------------
+# Definir coeficientes manualmente
+# Solo hay que modificar estos valores según tu polinomio
+# --------------------------
+a0 = 1.17   # coeficiente de x^0
+a1 = 1.81   # coeficiente de x^1
+a2 = 0.0    # coeficiente de x^2
+a3 = 0.0   # coeficiente de x^3
+a4 = 0.0   # coeficiente de x^4
+a5 = 0.0   # coeficiente de x^5
+a6 = 0.0   # coeficiente de x^6
+a7 = 0.0   # coeficiente de x^7
+a8 = 0.0
+a9 = 0.0
+a10 = 0.0
+
+# --------------------------
+# Definir la función polinómica
+# --------------------------
+f(x) = a0 + a1*x + a2*x**2 + a3*x**3 + a4*x**4 + a5*x**5 + a6*x**6 + a7*x**7 + a8*x**8 + a9*x**9 + a10*x**10
+
+# --------------------------
+# Crear string con la ecuación para mostrar
+# --------------------------
+ecuacion = sprintf("%.3f", a0)
+if (grado >= 1)  ecuacion = ecuacion . sprintf(" + %.3f x", a1)
+if (grado >= 2)  ecuacion = ecuacion . sprintf(" + %.3f x^2", a2)
+if (grado >= 3)  ecuacion = ecuacion . sprintf(" + %.3f x^3", a3)
+if (grado >= 4)  ecuacion = ecuacion . sprintf(" + %.3f x^4", a4)
+if (grado >= 5)  ecuacion = ecuacion . sprintf(" + %.3f x^5", a5)
+if (grado >= 6)  ecuacion = ecuacion . sprintf(" + %.3f x^6", a6)
+if (grado >= 7)  ecuacion = ecuacion . sprintf(" + %.3f x^7", a7)
+if (grado >= 8)  ecuacion = ecuacion . sprintf(" + %.3f x^8", a8)
+if (grado >= 9)  ecuacion = ecuacion . sprintf(" + %.3f x^9", a9)
+if (grado >=10)  ecuacion = ecuacion . sprintf(" + %.3f x^10", a10)
+
+set label 1 at graph 0.05,0.95 ecuacion front
+
+# --------------------------
+# Graficar puntos y polinomio
+# --------------------------
+plot "datos.txt" using 1:2 with points pt 7 ps 1.5 lc rgb "red" title "Datos", \
+     f(x) with lines lw 2 lc rgb "blue" title sprintf("Polinomio grado %d", grado)
+
+set output
