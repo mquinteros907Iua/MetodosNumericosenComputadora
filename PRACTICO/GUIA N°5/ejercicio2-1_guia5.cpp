@@ -53,7 +53,7 @@ double lagrange(double x[], double y[], int n, double xp) {
 	// pow(exp,pow(-x,2))
 	double exponente = -xp * xp;  // Para f(x) = e^(-x^2)
 	double yCopete = exp(exponente);  // exp() es la función exponencial e^x
-	double error = fabs(suma - yCopete); //(e (x) = |f (x) - PN (x)|) 
+	double error = fabs(yCopete - suma); //(e (x) = |f (x) - PN (x)|) 
 	printf("\nValor %.6lf evaluado en la funcion = %.6lf\n", xp,yCopete);
 	printf("El error es: %.6lf", error);
 	
