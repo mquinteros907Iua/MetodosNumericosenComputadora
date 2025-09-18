@@ -1,0 +1,74 @@
+# ------------------------------------------------------------
+# Script Gnuplot: Splines Cúbicas con Punto de Evaluación
+# ------------------------------------------------------------
+
+set terminal pngcairo size 800,600 enhanced font "Arial,12"
+set output "spline_cubica_modificada.png"
+set grid
+set xlabel "X"
+set ylabel "Y"
+set title "Interpolación Segmentaria - Splines Cúbicas Modificada"
+
+# Ejes en X=0 y Y=0
+set xzeroaxis lw 2 lc rgb "black"
+set yzeroaxis lw 2 lc rgb "black"
+
+# Ajuste automático de rangos según datos
+stats "datos.txt" using 1 nooutput
+Xmin = STATS_min
+Xmax = STATS_max
+stats "datos.txt" using 2 nooutput
+Ymin = STATS_min
+Ymax = STATS_max
+
+deltaX = (Xmax - Xmin)*1
+deltaY = (Ymax - Ymin)*1
+set xrange [Xmin - deltaX : Xmax + deltaX]
+set yrange [Ymin - deltaY : Ymax + deltaY]
+
+# Leer nodos desde datos.txt
+x0 = real(word(system("awk 'NR==1{print $1}' datos.txt"),1))
+x1 = real(word(system("awk 'NR==2{print $1}' datos.txt"),1))
+x2 = real(word(system("awk 'NR==3{print $1}' datos.txt"),1))
+
+# Definir coeficientes (tal como estaban)
+# Intervalo [x0, x1]
+a0 = 1.0
+b0 = 2.0
+c0 = 0.0
+d0 = 0.0
+
+# Intervalo [x1, x2]
+a1 = 1.0
+b1 = 2.0
+c1 = 0.0
+d1 = 0.0
+
+# Definir funciones spline por intervalo sin la resta
+S0(x) = a0 + b0*x + c0*x**2 + d0*x**3
+S1(x) = a1 + b1*x + c1*x**2 + d1*x**3
+
+# Valor a evaluar
+x_eval = 0.5   # modificar según necesidad
+
+# Determinar en qué intervalo cae
+if (x_eval >= x0 && x_eval <= x1) {
+    y_eval = S0(x_eval)
+    ecuacion = sprintf("S0(x) = %.3f + %.3f x + %.3f x^2 + %.3f x^3", \
+                        a0,b0,c0,d0)
+}
+if (x_eval > x1 && x_eval <= x2) {
+    y_eval = S1(x_eval)
+    ecuacion = sprintf("S1(x) = %.3f + %.3f x + %.3f x^2 + %.3f x^3", \
+                        a1,b1,c1,d1)
+}
+
+print sprintf("En x=%.3f, Spline=%.6f", x_eval, y_eval)
+
+# Mostrar la ecuación en el gráfico
+set label 1 at graph 0.05,0.95 ecuacion front
+
+# Graficar datos, spline segmentario y punto de x_eval
+plot "datos.txt" using 1:2 with points pt 7 ps 1.5 lc rgb "red" title "Datos", \
+     S0(x) with lines lw 2 lc rgb "blue" title "S0(x)", \
+     S1(x) with lines lw 2 lc rgb "green" title "S1(x)"
