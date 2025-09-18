@@ -28,6 +28,7 @@ deltaY = (Ymax - Ymin)*1
 
 set xrange [0 : 6]       #RANGO MODIFICABLE , EJE X
 set yrange [0 : 11]      #RANGO MODIFICABLE, EJE Y
+
 # Leer nodos desde datos.txt
 x0 = real(word(system("awk 'NR==1{print $1}' datos.txt"),1))
 x1 = real(word(system("awk 'NR==2{print $1}' datos.txt"),1))
