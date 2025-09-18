@@ -23,9 +23,11 @@ Ymax = STATS_max
 
 deltaX = (Xmax - Xmin)*1
 deltaY = (Ymax - Ymin)*1
-set xrange [Xmin - deltaX : Xmax + deltaX]
-set yrange [Ymin - deltaY : Ymax + deltaY]
+#set xrange [Xmin - deltaX : Xmax + deltaX]    #RANGO DEL GRAFICO AUTOMATICO 
+#set yrange [Ymin - deltaY : Ymax + deltaY]
 
+set xrange [0 : 6]       #RANGO MODIFICABLE , EJE X
+set yrange [0 : 11]      #RANGO MODIFICABLE, EJE Y
 # Leer nodos desde datos.txt
 x0 = real(word(system("awk 'NR==1{print $1}' datos.txt"),1))
 x1 = real(word(system("awk 'NR==2{print $1}' datos.txt"),1))
@@ -66,7 +68,7 @@ if (x_eval > x1 && x_eval <= x2) {
 print sprintf("En x=%.3f, Spline=%.6f", x_eval, y_eval)
 
 # Mostrar la ecuación en el gráfico
-set label 1 at graph 0.05,0.95 ecuacion front
+set label 1 at graph 0.05,0.90 ecuacion front
 
 # Graficar datos, spline segmentario y punto de x_eval
 plot "datos.txt" using 1:2 with points pt 7 ps 1.5 lc rgb "red" title "Datos", \
