@@ -26,10 +26,13 @@ stats "datos.txt" using 2 nooutput
 Ymin = STATS_min
 Ymax = STATS_max
 
-deltaX = (Xmax - Xmin)*0.05
-deltaY = (Ymax - Ymin)*0.05
-set xrange [Xmin - deltaX : Xmax + deltaX]
-set yrange [Ymin - deltaY : Ymax + deltaY]
+deltaX = (Xmax - Xmin)*0.1
+deltaY = (Ymax - Ymin)*0.1
+#set xrange [Xmin - deltaX : Xmax + deltaX] 
+#set yrange [Ymin - deltaY : Ymax + deltaY]
+
+set xrange [0 : 6]
+set yrange [0 : 11]
 
 # --------------------------
 # Definir grado del polinomio
@@ -72,7 +75,7 @@ if (grado >= 8)  ecuacion = ecuacion . sprintf(" + %.3f x^8", a8)
 if (grado >= 9)  ecuacion = ecuacion . sprintf(" + %.3f x^9", a9)
 if (grado >=10)  ecuacion = ecuacion . sprintf(" + %.3f x^10", a10)
 
-set label 1 at graph 0.05,0.95 ecuacion front
+set label 1 at graph 0.05,0.90 ecuacion front
 
 # --------------------------
 # Graficar puntos y polinomio
