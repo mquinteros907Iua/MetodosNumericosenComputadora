@@ -71,6 +71,14 @@ print sprintf("En x=%.3f, Spline=%.6f", x_eval, y_eval)
 # Mostrar la ecuación en el gráfico
 set label 1 at graph 0.05,0.90 ecuacion front
 
+# --------------------------
+# Mostrar tabla de datos (X , Y) en recuadro
+# --------------------------
+set label 2 at graph 0.02,0.75 left front \
+sprintf("   X       Y\n%s", system("awk '{printf \"%6.2f   %6.2f\\n\", $1, $2}' datos.txt")) \
+font "Arial,10" tc rgb "black" boxed
+
+
 # Graficar datos, spline segmentario y punto de x_eval
 plot "datos.txt" using 1:2 with points pt 7 ps 1.5 lc rgb "red" title "Datos", \
      S0(x) with lines lw 2 lc rgb "blue" title "S0(x)", \

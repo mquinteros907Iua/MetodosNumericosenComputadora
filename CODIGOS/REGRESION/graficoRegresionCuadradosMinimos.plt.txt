@@ -78,6 +78,14 @@ if (grado >=10)  ecuacion = ecuacion . sprintf(" + %.3f x^10", a10)
 set label 1 at graph 0.05,0.90 ecuacion front
 
 # --------------------------
+# Mostrar tabla de datos (X , Y) en recuadro
+# --------------------------
+set label 2 at graph 0.02,0.75 left front \
+sprintf("   X       Y\n%s", system("awk '{printf \"%6.2f   %6.2f\\n\", $1, $2}' datos.txt")) \
+font "Arial,10" tc rgb "black" boxed
+
+
+# --------------------------
 # Graficar puntos y polinomio
 # --------------------------
 plot "datos.txt" using 1:2 with points pt 7 ps 1.5 lc rgb "red" title "Datos", \
