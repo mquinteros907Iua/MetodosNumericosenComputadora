@@ -28,36 +28,37 @@ Ymax = STATS_max
 
 deltaX = (Xmax - Xmin)*0.1
 deltaY = (Ymax - Ymin)*0.1
-#set xrange [Xmin - deltaX : Xmax + deltaX]    #RANGO DEL GRAFICO AUTOMATICO 
-#set yrange [Ymin - deltaY : Ymax + deltaY]
 
-set xrange [0 : 6]       #RANGO MODIFICABLE , EJE X
-set yrange [0 : 11]      #RANGO MODIFICABLE, EJE Y
+		#set xrange [Xmin - deltaX : Xmax + deltaX]    #RANGO DEL GRAFICO AUTOMATICO (Desactivado)
+		#set yrange [Ymin - deltaY : Ymax + deltaY]
 
-# --------------------------
-# Definir grado del polinomio
-# --------------------------
-grado = 1  # <- Cambiar al grado del polinomio
+		set xrange [0 : 6]      			 #RANGO MODIFICABLE , EJE X  #(Debo modificar desde donde la quiero en x)
+		set yrange [0 : 11]    				  #RANGO MODIFICABLE, EJE Y   #(Debo modificar desde donde la quiero en y)
 
-# --------------------------
-# Definir coeficientes manualmente
-# Solo hay que modificar estos valores según tu polinomio
-# --------------------------
-a0 = 1.17   # coeficiente de x^0
-a1 = 1.81   # coeficiente de x^1
-a2 = 0.0    # coeficiente de x^2
-a3 = 0.0   # coeficiente de x^3
-a4 = 0.0   # coeficiente de x^4
-a5 = 0.0   # coeficiente de x^5
-a6 = 0.0   # coeficiente de x^6
-a7 = 0.0   # coeficiente de x^7
-a8 = 0.0
-a9 = 0.0
-a10 = 0.0
+									# --------------------------
+									# Definir grado del polinomio (me lo van a decir)
+									# --------------------------
+		grado = 1  # <- Cambiar al grado del polinomio	
 
-# --------------------------
-# Definir la función polinómica
-# --------------------------
+									# --------------------------
+									# Definir coeficientes manualmente
+									# Solo hay que modificar estos valores según tu polinomio (Después de realizar el metodo)(para ayudar a completar 									bien mira el polinomio de mas abajo)
+									# --------------------------
+		a0 = 1.17   # coeficiente de x^0
+		a1 = 1.81   # coeficiente de x^1
+		a2 = 0.0    # coeficiente de x^2
+		a3 = 0.0   # coeficiente de x^3
+		a4 = 0.0   # coeficiente de x^4
+		a5 = 0.0   # coeficiente de x^5
+		a6 = 0.0   # coeficiente de x^6
+		a7 = 0.0   # coeficiente de x^7
+		a8 = 0.0
+		a9 = 0.0
+		a10 = 0.0
+
+									# --------------------------
+									# Definir la función polinómica (no se modica)
+									# --------------------------
 f(x) = a0 + a1*x + a2*x**2 + a3*x**3 + a4*x**4 + a5*x**5 + a6*x**6 + a7*x**7 + a8*x**8 + a9*x**9 + a10*x**10
 
 # --------------------------
@@ -76,14 +77,6 @@ if (grado >= 9)  ecuacion = ecuacion . sprintf(" + %.3f x^9", a9)
 if (grado >=10)  ecuacion = ecuacion . sprintf(" + %.3f x^10", a10)
 
 set label 1 at graph 0.05,0.90 ecuacion front
-
-# --------------------------
-# Mostrar tabla de datos (X , Y) en recuadro
-# --------------------------
-set label 2 at graph 0.02,0.75 left front \
-sprintf("   X       Y\n%s", system("awk '{printf \"%6.2f   %6.2f\\n\", $1, $2}' datos.txt")) \
-font "Arial,10" tc rgb "black" boxed
-
 
 # --------------------------
 # Graficar puntos y polinomio

@@ -23,36 +23,45 @@ Ymax = STATS_max
 
 deltaX = (Xmax - Xmin)*1
 deltaY = (Ymax - Ymin)*1
-#set xrange [Xmin - deltaX : Xmax + deltaX]    #RANGO DEL GRAFICO AUTOMATICO 
-#set yrange [Ymin - deltaY : Ymax + deltaY]
+				#set xrange [Xmin - deltaX : Xmax + deltaX]    #RANGO DEL GRAFICO AUTOMATICO (Desactivado)
+				#set yrange [Ymin - deltaY : Ymax + deltaY]
 
-set xrange [0 : 6]       #RANGO MODIFICABLE , EJE X
-set yrange [0 : 11]      #RANGO MODIFICABLE, EJE Y
+				set xrange [0 : 6]       #RANGO MODIFICABLE , EJE X   #(Debo modificar desde donde la quiero en x)
+				set yrange [0 : 11]      #RANGO MODIFICABLE, EJE Y    #(Debo modificar desde donde la quiero en y)
 
-# Leer nodos desde datos.txt
-x0 = real(word(system("awk 'NR==1{print $1}' datos.txt"),1))
-x1 = real(word(system("awk 'NR==2{print $1}' datos.txt"),1))
-x2 = real(word(system("awk 'NR==3{print $1}' datos.txt"),1))
+								# Leer nodos desde datos.txt (puede ser que tenga que agregar un x mas en el caso de que )
+			x0 = real(word(system("awk 'NR==1{print $1}' datos.txt"),1))
+			x1 = real(word(system("awk 'NR==2{print $1}' datos.txt"),1))
+			x2 = real(word(system("awk 'NR==3{print $1}' datos.txt"),1))
+			#x3 = real(word(system("awk 'NR==4{print $1}' datos.txt"),1))    #Por so hace falta
 
-# Definir coeficientes (tal como estaban)
-# Intervalo [x0, x1]
-a0 = 1.0
-b0 = 2.0
-c0 = 0.0
-d0 = 0.0
+							# Definir coeficientes (tal como estaban en la consola despues de ejecuar el metodo soi queres de referencia mira el polinomio de 								mas abajo)
+							# Intervalo [x0, x1]
+			a0 = 1.0
+			b0 = 2.0
+			c0 = 0.0
+			d0 = 0.0
 
-# Intervalo [x1, x2]
-a1 = 1.0
-b1 = 2.0
-c1 = 0.0
-d1 = 0.0
+							# Intervalo [x1, x2]
+			a1 = 1.0
+			b1 = 2.0
+			c1 = 0.0
+			d1 = 0.0
 
-# Definir funciones spline por intervalo sin la resta
-S0(x) = a0 + b0*x + c0*x**2 + d0*x**3
-S1(x) = a1 + b1*x + c1*x**2 + d1*x**3
+			#a2 = 1.0			#Estos se descomentan en el caso de que pida otro intervalo (va ligado a descomentar lo de mas arriba)
+			#b2 = 2.0
+			#c2 = 0.0
+			#d2 = 0.0
 
-# Valor a evaluar
-x_eval = 0.5   # modificar según necesidad
+			# Definir funciones spline por intervalo sin la resta
+			S0(x) = a0 + b0*x + c0*x**2 + d0*x**3
+			S1(x) = a1 + b1*x + c1*x**2 + d1*x**3
+
+			#S2(x) = a2 + b2*x + c2*x**2 + d2*x**3			#Esto se descomentan en el caso de que pida otro intervalo (va ligado a descomentar lo de mas arriba)
+
+			# Valor a evaluar
+			x_eval = 0.5  					 # modificar según el ejercicio (te van a dar un x espesiico)
+
 
 # Determinar en qué intervalo cae
 if (x_eval >= x0 && x_eval <= x1) {
@@ -66,20 +75,21 @@ if (x_eval > x1 && x_eval <= x2) {
                         a1,b1,c1,d1)
 }
 
+
+#if (x_eval > x2 && x_eval <= x3) {							#Esto se descomentan en el caso de que pida otro intervalo (va ligado a descomentar lo de mas arriba)
+#   y_eval = S2(x_eval)
+#   ecuacion = sprintf("S2(x) = %.3f + %.3f x + %.3f x^2 + %.3f x^3", \
+#                       a2,b2,c2,d2)
+#}
+
+
 print sprintf("En x=%.3f, Spline=%.6f", x_eval, y_eval)
 
 # Mostrar la ecuación en el gráfico
 set label 1 at graph 0.05,0.90 ecuacion front
 
-# --------------------------
-# Mostrar tabla de datos (X , Y) en recuadro
-# --------------------------
-set label 2 at graph 0.02,0.75 left front \
-sprintf("   X       Y\n%s", system("awk '{printf \"%6.2f   %6.2f\\n\", $1, $2}' datos.txt")) \
-font "Arial,10" tc rgb "black" boxed
-
-
 # Graficar datos, spline segmentario y punto de x_eval
 plot "datos.txt" using 1:2 with points pt 7 ps 1.5 lc rgb "red" title "Datos", \
      S0(x) with lines lw 2 lc rgb "blue" title "S0(x)", \
      S1(x) with lines lw 2 lc rgb "green" title "S1(x)"
+	#S2(x) with lines lw 2 lc rgb "orange" title "S2(x)"				#Estos se descomentan en el caso de que pida otro intervalo (va ligado a descomentar lo de mas arriba)
