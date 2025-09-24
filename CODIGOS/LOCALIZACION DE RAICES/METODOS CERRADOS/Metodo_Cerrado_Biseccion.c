@@ -7,9 +7,7 @@ biseccion.c
 #include <stdio.h>
 #include <math.h>
 
-/* --------- Declaración de la función f(x) ---------
-
-//																				Editár esta función para cambiar el problema. */
+/* --------- Declaración de la función f(x) --------- */
 double Funcion(double x) {
 	
 	return x*x*x - 7.0*x + 1.0;

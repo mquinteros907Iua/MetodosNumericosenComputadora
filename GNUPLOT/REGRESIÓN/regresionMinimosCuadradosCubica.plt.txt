@@ -1,0 +1,84 @@
+# ------------------------------------------------------------
+# Script Gnuplot: Regresión Automática Correcta hasta cúbico
+# ------------------------------------------------------------
+
+# Configuración básica
+set terminal pngcairo size 800,600 enhanced font "Arial,12"
+set output "regresion_auto_final.png"
+set grid
+set xlabel "Eje X"
+set ylabel "Eje Y"
+set title "Regresión por Mínimos Cuadrados (grado automático)"
+
+# ------------------------------------------------------------
+# Contar puntos y calcular rangos con margen
+# ------------------------------------------------------------
+stats "datos.txt" using 1 nooutput
+N = STATS_records
+Xmin = STATS_min
+Xmax = STATS_max
+
+stats "datos.txt" using 2 nooutput
+Ymin = STATS_min
+Ymax = STATS_max
+
+deltaX = (Xmax - Xmin)*0.05
+deltaY = (Ymax - Ymin)*0.05
+
+set xrange [Xmin - deltaX : Xmax + deltaX]
+set yrange [Ymin - deltaY : Ymax + deltaY]
+
+# ------------------------------------------------------------
+# Inicializar todos los parámetros de antemano
+# ------------------------------------------------------------
+a=1; b=1; c=1; d=1
+
+# ------------------------------------------------------------
+# Determinar grado máximo posible
+# ------------------------------------------------------------
+if (N >= 4) {
+    grado = 3
+} else if (N == 3) {
+    grado = 2
+} else if (N == 2) {
+    grado = 1
+} else {
+    print "ERROR: No hay suficientes puntos para regresión."
+    exit
+}
+
+print "Número de puntos: ", N
+print "Se ajustará un polinomio de grado: ", grado
+
+# ------------------------------------------------------------
+# Definir función polinómica según el grado fuera del if
+# ------------------------------------------------------------
+f(x) = (grado==3)? (a + b*x + c*x**2 + d*x**3) : \
+       (grado==2)? (a + b*x + c*x**2) : \
+       (a + b*x)
+
+# ------------------------------------------------------------
+# Ajustar la función a los datos
+# ------------------------------------------------------------
+if (grado == 3) { fit f(x) "datos.txt" using 1:2 via a,b,c,d }
+else if (grado == 2) { fit f(x) "datos.txt" using 1:2 via a,b,c }
+else { fit f(x) "datos.txt" using 1:2 via a,b }
+
+# ------------------------------------------------------------
+# Crear string con la ecuación del polinomio
+# ------------------------------------------------------------
+if (grado == 3) { ecuacion = sprintf("y = %.3f + %.3f x + %.3f x^2 + %.3f x^3", a,b,c,d) }
+else if (grado == 2) { ecuacion = sprintf("y = %.3f + %.3f x + %.3f x^2", a,b,c) }
+else { ecuacion = sprintf("y = %.3f + %.3f x", a,b) }
+
+# Mostrar la ecuación en la esquina superior izquierda
+set label 1 at graph 0.05,0.95 ecuacion front
+
+# ------------------------------------------------------------
+# Graficar los datos y la curva de regresión
+# ------------------------------------------------------------
+plot "datos.txt" using 1:2 with points pt 7 ps 1.5 lc rgb "red" title "Datos", \
+     f(x) with lines lw 2 lc rgb "blue" title sprintf("Ajuste (grado %d)", grado)
+
+set output
+

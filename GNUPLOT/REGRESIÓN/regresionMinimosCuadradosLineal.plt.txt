@@ -1,0 +1,26 @@
+# ------------------------------------------------------------
+# Script Gnuplot: Regresión por Mínimos Cuadrados
+# ------------------------------------------------------------
+
+# Configuración básica de salida
+set terminal pngcairo size 800,600 enhanced font "Arial,12"   # Salida PNG con tamaño y fuente legible
+set output "grafico.png"                                     # Nombre del archivo de salida
+set grid                                                     # Activar cuadrícula
+set xlabel "Eje X"                                           # Etiqueta eje X
+set ylabel "Eje Y"                                           # Etiqueta eje Y
+set title "Regresión por Mínimos Cuadrados"                  # Título de la gráfica
+
+# ----------------------------------------
+# Ajuste automático de rangos según los datos
+# ----------------------------------------
+
+set autoscale
+
+# Definir estilo de línea y puntos
+set style line 1 lc rgb "blue" lw 2 pt 7 ps 1.5
+
+# Graficar los datos con puntos y línea
+plot "datos.txt" using 1:2 with linespoints linestyle 1 title "Datos"
+
+# Cerrar salida
+set output

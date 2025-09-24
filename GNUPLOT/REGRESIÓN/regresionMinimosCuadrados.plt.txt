@@ -1,0 +1,92 @@
+# ------------------------------------------------------------
+# Script Gnuplot: Regresión Polinómica Interactiva por Mínimos Cuadrados
+# ------------------------------------------------------------
+
+# --------------------------
+# Configuración básica
+# --------------------------
+set terminal pngcairo size 800,600 enhanced font "Arial,12"
+set output "regresion_polinomica.png"
+set grid
+set xlabel "Eje X"
+set ylabel "Eje Y"
+set title "Regresión Polinómica por Mínimos Cuadrados"
+
+# --------------------------
+# Leer datos y calcular rangos con margen
+# --------------------------
+stats "datos.txt" using 1 nooutput
+Xmin = STATS_min
+Xmax = STATS_max
+N = STATS_records
+
+stats "datos.txt" using 2 nooutput
+Ymin = STATS_min
+Ymax = STATS_max
+
+deltaX = (Xmax - Xmin)*0.05
+deltaY = (Ymax - Ymin)*0.05
+set xrange [Xmin - deltaX : Xmax + deltaX]
+set yrange [Ymin - deltaY : Ymax + deltaY]
+
+# --------------------------
+# Pedir al usuario el grado del polinomio
+# --------------------------
+print "Ingrese el grado del polinomio deseado (menor que ", N, "):"
+grado = real(system("read grado; echo $grado"))
+
+if (grado >= N) {
+    print "ERROR: El grado del polinomio no puede ser mayor o igual al número de puntos"
+    exit
+}
+
+print "Número de puntos: ", N
+print "Se ajustará un polinomio de grado: ", grado
+
+# --------------------------
+# Inicializar parámetros para polinomio de grado n
+# --------------------------
+do for [i=0:grado] {
+    eval(sprintf("a%d=1",i))
+}
+
+# --------------------------
+# Definir la función polinómica
+# --------------------------
+f(x) = 0
+do for [i=0:grado] {
+    f(x) = f(x) + eval(sprintf("a%d*x**%d",i,i))
+}
+
+# --------------------------
+# Preparar lista de parámetros para fit
+# --------------------------
+fit_params = ""
+do for [i=0:grado] {
+    fit_params = (fit_params eq "") ? sprintf("a%d",i) : fit_params.",a".i
+}
+
+# --------------------------
+# Ajustar polinomio a los datos
+# --------------------------
+fit f(x) "datos.txt" using 1:2 via @fit_params
+
+# --------------------------
+# Crear string con la ecuación del polinomio
+# --------------------------
+ecuacion = ""
+do for [i=0:grado] {
+    ecuacion = (ecuacion eq "") ? sprintf("%.3f", eval(sprintf("a%d",i))) : \
+               ecuacion . sprintf(" + %.3f x^%d", eval(sprintf("a%d",i)),i)
+}
+
+# Mostrar la ecuación en la gráfica
+set label 1 at graph 0.05,0.95 ecuacion front
+
+# --------------------------
+# Graficar los datos y la curva de regresión
+# --------------------------
+plot "datos.txt" using 1:2 with points pt 7 ps 1.5 lc rgb "red" title "Datos", \
+     f(x) with lines lw 2 lc rgb "blue" title sprintf("Ajuste polinomico grado %d", grado)
+
+set output
