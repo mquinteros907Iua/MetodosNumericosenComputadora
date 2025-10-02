@@ -1,95 +1,174 @@
-# ------------------------------------------------------------
-# Script Gnuplot: Splines Cúbicas con Punto de Evaluación
-# ------------------------------------------------------------
+# ============================================================
+#  SCRIPT GNUPLOT — SPLINES CÚBICAS (LISTO PARA WINDOWS)
+#  Con comentarios "🔧 CAMBIA AQUÍ" para que sea fácil editar
+# ============================================================
 
-set terminal pngcairo size 800,600 enhanced font "Arial,12"
-set output "spline_cubica_modificada.png"
-set grid
+reset
+
+# ---------- SALIDA A IMAGEN ----------
+set terminal pngcairo size 900,650 enhanced font "Arial,12"
+# 🔧 CAMBIA AQUÍ: nombre del archivo de salida (la imagen resultante)
+set output "spline_cubica.png"
+
+# ---------- ESTÉTICA GENERAL ----------
+set grid                         # línea de cuadrícula
+set key outside right top        # leyenda fuera del gráfico
+set border lw 1.5
 set xlabel "X"
 set ylabel "Y"
-set title "Interpolación Segmentaria - Splines Cúbicas Modificada"
+set title "Interpolación Segmentaria - Splines Cúbicas"
 
-# Ejes en X=0 y Y=0
+# Ejes en X=0 y Y=0 (más fácil de leer)
 set xzeroaxis lw 2 lc rgb "black"
 set yzeroaxis lw 2 lc rgb "black"
 
-# Ajuste automático de rangos según datos
-stats "datos.txt" using 1 nooutput
+# ============================================================
+# 1) CONFIGURAR FORMATO DEL ARCHIVO DE DATOS
+#    Elige SÓLO UNA opción según cómo esté 'datos.txt'
+# ============================================================
+
+# Opción 1: columnas separadas por espacio/tab y DECIMAL con PUNTO (ej.: 0.0  1.5)
+set datafile separator whitespace
+set decimalsign '.'
+
+# Opción 2: CSV “a la española”: columnas separadas por ';' y DECIMAL con COMA (ej.: 0,0;1,5)
+# set datafile separator ';'
+# set decimalsign ','
+
+# Opción 3: CSV con coma como separador y decimal con PUNTO (ej.: 0.0,1.5)
+# set datafile separator ','
+# set decimalsign '.'
+
+# ---------- ARCHIVO DE DATOS ----------
+# 🔧 CAMBIA AQUÍ si el archivo no se llama 'datos.txt' o está en otra carpeta
+DATAFILE = "datos.txt"
+
+# ============================================================
+# 2) RANGOS DEL GRÁFICO (AUTOMÁTICOS O MANUALES)
+# ============================================================
+
+# (A) Rango automático a partir de tus datos (activa si lo prefieres)
+stats DATAFILE using 1 nooutput
 Xmin = STATS_min
 Xmax = STATS_max
-stats "datos.txt" using 2 nooutput
+stats DATAFILE using 2 nooutput
 Ymin = STATS_min
 Ymax = STATS_max
 
-deltaX = (Xmax - Xmin)*1
-deltaY = (Ymax - Ymin)*1
-				#set xrange [Xmin - deltaX : Xmax + deltaX]    #RANGO DEL GRAFICO AUTOMATICO (Desactivado)
-				#set yrange [Ymin - deltaY : Ymax + deltaY]
+# 🔧 OPCIÓN A (auto): descomenta estas 2 líneas para ajustar automáticamente
+# set xrange [Xmin : Xmax]
+# set yrange [Ymin : Ymax]
 
-				set xrange [0 : 6]       #RANGO MODIFICABLE , EJE X   #(Debo modificar desde donde la quiero en x)
-				set yrange [0 : 11]      #RANGO MODIFICABLE, EJE Y    #(Debo modificar desde donde la quiero en y)
+# 🔧 OPCIÓN B (manual): define a mano los rangos que quieras
+set xrange [0 : 6]
+set yrange [0 : 11]
 
-								# Leer nodos desde datos.txt (puede ser que tenga que agregar un x mas en el caso de que )
-			x0 = real(word(system("awk 'NR==1{print $1}' datos.txt"),1))
-			x1 = real(word(system("awk 'NR==2{print $1}' datos.txt"),1))
-			x2 = real(word(system("awk 'NR==3{print $1}' datos.txt"),1))
-			#x3 = real(word(system("awk 'NR==4{print $1}' datos.txt"),1))    #Por so hace falta
+# ============================================================
+# 3) LECTURA DE NODOS x0, x1, x2, (x3 opcional) DESDE EL ARCHIVO
+#    — Se leen de la COLUMNA 1, filas 1,2,3,... (índice base 0)
+# ============================================================
 
-							# Definir coeficientes (tal como estaban en la consola despues de ejecuar el metodo soi queres de referencia mira el polinomio de 								mas abajo)
-							# Intervalo [x0, x1]
-			a0 = 1.0
-			b0 = 2.0
-			c0 = 0.0
-			d0 = 0.0
+# 🔧 CAMBIA AQUÍ: si tu archivo tiene más/menos puntos, ajusta las filas
+stats DATAFILE using 1 every ::0::0 nooutput; x0 = STATS_min   # fila 1 -> x0
+stats DATAFILE using 1 every ::1::1 nooutput; x1 = STATS_min   # fila 2 -> x1
+stats DATAFILE using 1 every ::2::2 nooutput; x2 = STATS_min   # fila 3 -> x2
+# Si hay un cuarto nodo (x3), descomenta las 2 líneas siguientes:
+# stats DATAFILE using 1 every ::3::3 nooutput; x3 = STATS_min  # fila 4 -> x3
 
-							# Intervalo [x1, x2]
-			a1 = 1.0
-			b1 = 2.0
-			c1 = 0.0
-			d1 = 0.0
+# (DEBUG opcional) Imprimir lo leído
+print sprintf("DEBUG nodos: x0=%.6f  x1=%.6f  x2=%.6f", x0, x1, x2)
 
-			#a2 = 1.0			#Estos se descomentan en el caso de que pida otro intervalo (va ligado a descomentar lo de mas arriba)
-			#b2 = 2.0
-			#c2 = 0.0
-			#d2 = 0.0
+# ============================================================
+# 4) COEFICIENTES DE LOS SPLINES POR INTERVALO
+#    Cada intervalo [xi, xi+1] tiene su polinomio: a + b x + c x^2 + d x^3
+# ============================================================
 
-			# Definir funciones spline por intervalo sin la resta
-			S0(x) = a0 + b0*x + c0*x**2 + d0*x**3
-			S1(x) = a1 + b1*x + c1*x**2 + d1*x**3
+# ---------- Intervalo [x0, x1] ----------
+# 🔧 CAMBIA AQUÍ: pon los coeficientes del polinomio S0 para [x0, x1]
+a0 = 1.0
+b0 = 2.0
+c0 = 0.0
+d0 = 0.0
 
-			#S2(x) = a2 + b2*x + c2*x**2 + d2*x**3			#Esto se descomentan en el caso de que pida otro intervalo (va ligado a descomentar lo de mas arriba)
+# ---------- Intervalo [x1, x2] ----------
+# 🔧 CAMBIA AQUÍ: pon los coeficientes del polinomio S1 para [x1, x2]
+a1 = 1.0
+b1 = 2.0
+c1 = 0.0
+d1 = 0.0
 
-			# Valor a evaluar
-			x_eval = 0.5  					 # modificar según el ejercicio (te van a dar un x espesiico)
+# ---------- Intervalo [x2, x3] (OPCIONAL) ----------
+# 🔧 CAMBIA AQUÍ: si tienes un tercer intervalo, descomenta y define S2
+# a2 = 1.0
+# b2 = 2.0
+# c2 = 0.0
+# d2 = 0.0
 
+# ---------- Definición de polinomios ----------
+S0(x) = a0 + b0*x + c0*x**2 + d0*x**3
+S1(x) = a1 + b1*x + c1*x**2 + d1*x**3
+# S2(x) = a2 + b2*x + c2*x**2 + d2*x**3   # 🔧 Descomenta si usas tercer intervalo
 
-# Determinar en qué intervalo cae
+# ============================================================
+# 5) PUNTO A EVALUAR EN EL SPLINE
+# ============================================================
+
+# 🔧 CAMBIA AQUÍ: x donde quieres evaluar el spline
+x_eval = 0.5
+
+# ============================================================
+# 6) ELECCIÓN DEL INTERVALO SEGÚN x_eval Y TEXTO A MOSTRAR
+# ============================================================
+
 if (x_eval >= x0 && x_eval <= x1) {
     y_eval = S0(x_eval)
-    ecuacion = sprintf("S0(x) = %.3f + %.3f x + %.3f x^2 + %.3f x^3", \
-                        a0,b0,c0,d0)
+    ecuacion = sprintf("S0(x) = %.3f + %.3f x + %.3f x^2 + %.3f x^3", a0,b0,c0,d0)
 }
 if (x_eval > x1 && x_eval <= x2) {
     y_eval = S1(x_eval)
-    ecuacion = sprintf("S1(x) = %.3f + %.3f x + %.3f x^2 + %.3f x^3", \
-                        a1,b1,c1,d1)
+    ecuacion = sprintf("S1(x) = %.3f + %.3f x + %.3f x^2 + %.3f x^3", a1,b1,c1,d1)
 }
-
-
-#if (x_eval > x2 && x_eval <= x3) {							#Esto se descomentan en el caso de que pida otro intervalo (va ligado a descomentar lo de mas arriba)
-#   y_eval = S2(x_eval)
-#   ecuacion = sprintf("S2(x) = %.3f + %.3f x + %.3f x^2 + %.3f x^3", \
-#                       a2,b2,c2,d2)
-#}
-
+# 🔧 CAMBIA AQUÍ: si agregaste S2 y tienes x3, descomenta este bloque
+# if (x_eval > x2 && x_eval <= x3) {
+#     y_eval = S2(x_eval)
+#     ecuacion = sprintf("S2(x) = %.3f + %.3f x + %.3f x^2 + %.3f x^3", a2,b2,c2,d2)
+# }
 
 print sprintf("En x=%.3f, Spline=%.6f", x_eval, y_eval)
 
-# Mostrar la ecuación en el gráfico
-set label 1 at graph 0.05,0.90 ecuacion front
+# ---------- Mostrar la ecuación del tramo elegido en la imagen ----------
+# 🔧 CAMBIA AQUÍ: posición del texto dentro del gráfico (formato graph u:0..1 v:0..1)
+set label 1 at graph 0.05,0.92 ecuacion front tc rgb "black"
 
-# Graficar datos, spline segmentario y punto de x_eval
-plot "datos.txt" using 1:2 with points pt 7 ps 1.5 lc rgb "red" title "Datos", \
-     S0(x) with lines lw 2 lc rgb "blue" title "S0(x)", \
-     S1(x) with lines lw 2 lc rgb "green" title "S1(x)"
-	#S2(x) with lines lw 2 lc rgb "orange" title "S2(x)"				#Estos se descomentan en el caso de que pida otro intervalo (va ligado a descomentar lo de mas arriba)
+# ============================================================
+# 7) ESTILOS DE DIBUJO (colores, grosor, puntos)
+# ============================================================
+
+# 🔧 CAMBIA AQUÍ: grosor de línea y tamaño de puntos
+L = 2          # grosor de líneas
+PS = 1.5       # tamaño de puntos
+
+# 🔧 CAMBIA AQUÍ: colores de cada cosa
+colDatos = "red"
+colS0    = "blue"
+colS1    = "green"
+colS2    = "orange"
+colEval  = "black"
+
+# ============================================================
+# 8) GRAFICAR
+# ============================================================
+
+# Dibuja puntos de datos y los tramos del spline
+plot \
+    DATAFILE using 1:2 with points pt 7 ps PS lc rgb colDatos title "Datos", \
+    S0(x) with lines lw L lc rgb colS0 title "S0(x)", \
+    S1(x) with lines lw L lc rgb colS1 title "S1(x)"
+    # , S2(x) with lines lw L lc rgb colS2 title "S2(x)"   # 🔧 Descomenta si usas tercer intervalo
+
+# (Opcional) marca el punto evaluado
+# replot x_eval, y_eval with points pt 7 ps (PS+0.3) lc rgb colEval title sprintf("Eval (%.2f, %.2f)", x_eval, y_eval)
+
+unset output
+# ===================== FIN DEL SCRIPT ======================
+

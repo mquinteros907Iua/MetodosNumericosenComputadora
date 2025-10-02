@@ -1,0 +1,17 @@
+# Configuración básica
+set terminal pngcairo size 800,600
+set output "grafico.png"
+set grid
+set xlabel "Eje X"
+set ylabel "Eje Y"
+set title "Datos del archivo ejercicio2-2.txt"
+
+# Definir rangos
+set xrange [-4:0]
+set yrange [-135:0]
+
+# Graficar datos
+plot "ejercicio2-2.txt" using 1:2 with points pt 7 ps 1.5 lc rgb "red" title "Datos", \
+     "ejercicio2-2.txt" using 1:2 with lines lw 2 lc rgb "blue" title "Interpolación"
+
+set output

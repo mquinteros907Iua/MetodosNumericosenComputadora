@@ -1,0 +1,256 @@
+
+
+*******************************************************************************
+Tue Sep 16 18:52:03 2025
+
+
+FIT:    data read from "datos.txt" using 1:2
+        format = x:z
+        x range restricted to [-5.25000 : 0.250000]
+        #datapoints = 3
+        residuals are weighted equally (unit weight)
+
+function used for fitting: f(x)
+	f(x) = (grado==3)? (a + b*x + c*x**2 + d*x**3) :        (grado==2)? (a + b*x + c*x**2) :        (a + b*x)
+fitted parameters initialized with current variable values
+
+iter      chisq       delta/lim  lambda   a             b             c            
+   0 9.6600000000e+02   0.00e+00  8.53e+00    1.000000e+00   1.000000e+00   1.000000e+00
+   6 0.0000000000e+00  -inf       8.53e-06    2.000000e+00   3.150000e+00   1.500000e-01
+
+After 6 iterations the fit converged.
+final sum of squares of residuals : 0
+abs. change during last iteration : -2.36323e-22
+
+
+Exactly as many data points as there are parameters.
+In this degenerate case, all errors are zero by definition.
+
+Final set of parameters 
+======================= 
+
+a               = 2              
+b               = 3.15           
+c               = 0.15           
+
+
+*******************************************************************************
+Tue Sep 16 18:52:49 2025
+
+
+FIT:    data read from "datos.txt" using 1:2
+        format = x:z
+        x range restricted to [-5.25000 : 0.250000]
+        #datapoints = 3
+        residuals are weighted equally (unit weight)
+
+function used for fitting: f(x)
+	f(x) = (grado==3)? (a + b*x + c*x**2 + d*x**3) :        (grado==2)? (a + b*x + c*x**2) :        (a + b*x)
+fitted parameters initialized with current variable values
+
+iter      chisq       delta/lim  lambda   a             b             c            
+   0 9.6600000000e+02   0.00e+00  8.53e+00    1.000000e+00   1.000000e+00   1.000000e+00
+   6 0.0000000000e+00  -inf       8.53e-06    2.000000e+00   3.150000e+00   1.500000e-01
+
+After 6 iterations the fit converged.
+final sum of squares of residuals : 0
+abs. change during last iteration : -2.36323e-22
+
+
+Exactly as many data points as there are parameters.
+In this degenerate case, all errors are zero by definition.
+
+Final set of parameters 
+======================= 
+
+a               = 2              
+b               = 3.15           
+c               = 0.15           
+
+
+*******************************************************************************
+Tue Sep 16 18:55:15 2025
+
+
+FIT:    data read from "datos.txt" using 1:2
+        format = x:z
+        x range restricted to [-5.75000 : 10.7500]
+        #datapoints = 5
+        residuals are weighted equally (unit weight)
+
+function used for fitting: f(x)
+	f(x) = (grado==3)? (a + b*x + c*x**2 + d*x**3) :        (grado==2)? (a + b*x + c*x**2) :        (a + b*x)
+fitted parameters initialized with current variable values
+
+iter      chisq       delta/lim  lambda   a             b             c             d            
+   0 1.2646540000e+06   0.00e+00  2.28e+02    1.000000e+00   1.000000e+00   1.000000e+00   1.000000e+00
+   5 1.6964953965e+00  -4.40e-01  2.28e-03    1.063023e+00   9.644154e-01  -2.009593e-01   1.036036e-02
+
+After 5 iterations the fit converged.
+final sum of squares of residuals : 1.6965
+rel. change during last iteration : -4.40062e-06
+
+degrees of freedom    (FIT_NDF)                        : 1
+rms of residuals      (FIT_STDFIT) = sqrt(WSSR/ndf)    : 1.3025
+variance of residuals (reduced chisquare) = WSSR/ndf   : 1.6965
+
+Final set of parameters            Asymptotic Standard Error
+=======================            ==========================
+a               = 1.06302          +/- 0.9047       (85.11%)
+b               = 0.964415         +/- 0.2776       (28.79%)
+c               = -0.200959        +/- 0.05047      (25.12%)
+d               = 0.0103604        +/- 0.006463     (62.39%)
+
+correlation matrix of the fit parameters:
+                a      b      c      d      
+a               1.000 
+b              -0.186  1.000 
+c              -0.685  0.442  1.000 
+d               0.470 -0.778 -0.871  1.000 
+
+
+*******************************************************************************
+Tue Sep 16 19:28:36 2025
+
+
+FIT:    data read from "datos.txt" using 1:2
+        format = x:z
+        x range restricted to [-5.75000 : 10.7500]
+        #datapoints = 5
+        residuals are weighted equally (unit weight)
+
+function used for fitting: f(x)
+	f(x) = (grado==3)? (a + b*x + c*x**2 + d*x**3) :        (grado==2)? (a + b*x + c*x**2) :        (a + b*x)
+fitted parameters initialized with current variable values
+
+iter      chisq       delta/lim  lambda   a             b             c             d            
+   0 1.2646540000e+06   0.00e+00  2.28e+02    1.000000e+00   1.000000e+00   1.000000e+00   1.000000e+00
+   5 1.6964953965e+00  -4.40e-01  2.28e-03    1.063023e+00   9.644154e-01  -2.009593e-01   1.036036e-02
+
+After 5 iterations the fit converged.
+final sum of squares of residuals : 1.6965
+rel. change during last iteration : -4.40062e-06
+
+degrees of freedom    (FIT_NDF)                        : 1
+rms of residuals      (FIT_STDFIT) = sqrt(WSSR/ndf)    : 1.3025
+variance of residuals (reduced chisquare) = WSSR/ndf   : 1.6965
+
+Final set of parameters            Asymptotic Standard Error
+=======================            ==========================
+a               = 1.06302          +/- 0.9047       (85.11%)
+b               = 0.964415         +/- 0.2776       (28.79%)
+c               = -0.200959        +/- 0.05047      (25.12%)
+d               = 0.0103604        +/- 0.006463     (62.39%)
+
+correlation matrix of the fit parameters:
+                a      b      c      d      
+a               1.000 
+b              -0.186  1.000 
+c              -0.685  0.442  1.000 
+d               0.470 -0.778 -0.871  1.000 
+
+
+*******************************************************************************
+Tue Sep 16 19:33:34 2025
+
+
+FIT:    data read from "datos.txt" using 1:2
+        format = x:z
+        x range restricted to [-5.25000 : 0.250000]
+        #datapoints = 3
+        residuals are weighted equally (unit weight)
+
+function used for fitting: f(x)
+	f(x) = a0 + a1*x + a2*x**2 + a3*x**3 + a4*x**4
+fitted parameters initialized with current variable values
+
+BREAK: Number of data points smaller than number of parameters
+
+*******************************************************************************
+Tue Sep 16 19:35:06 2025
+
+
+FIT:    data read from "datos.txt" using 1:2
+        format = x:z
+        x range restricted to [-5.25000 : 0.250000]
+        #datapoints = 3
+        residuals are weighted equally (unit weight)
+
+function used for fitting: f(x)
+	f(x) = a0 + a1*x + a2*x**2 + a3*x**3
+fitted parameters initialized with current variable values
+
+BREAK: Number of data points smaller than number of parameters
+
+*******************************************************************************
+Tue Sep 16 19:37:21 2025
+
+
+FIT:    data read from "datos.txt" using 1:2
+        format = x:z
+        x range restricted to [-5.75000 : 10.7500]
+        #datapoints = 5
+        residuals are weighted equally (unit weight)
+
+function used for fitting: f(x)
+	f(x) = (grado==3)? (a + b*x + c*x**2 + d*x**3) :        (grado==2)? (a + b*x + c*x**2) :        (a + b*x)
+fitted parameters initialized with current variable values
+
+iter      chisq       delta/lim  lambda   a             b             c             d            
+   0 1.2646540000e+06   0.00e+00  2.28e+02    1.000000e+00   1.000000e+00   1.000000e+00   1.000000e+00
+   5 1.6964953965e+00  -4.40e-01  2.28e-03    1.063023e+00   9.644154e-01  -2.009593e-01   1.036036e-02
+
+After 5 iterations the fit converged.
+final sum of squares of residuals : 1.6965
+rel. change during last iteration : -4.40062e-06
+
+degrees of freedom    (FIT_NDF)                        : 1
+rms of residuals      (FIT_STDFIT) = sqrt(WSSR/ndf)    : 1.3025
+variance of residuals (reduced chisquare) = WSSR/ndf   : 1.6965
+
+Final set of parameters            Asymptotic Standard Error
+=======================            ==========================
+a               = 1.06302          +/- 0.9047       (85.11%)
+b               = 0.964415         +/- 0.2776       (28.79%)
+c               = -0.200959        +/- 0.05047      (25.12%)
+d               = 0.0103604        +/- 0.006463     (62.39%)
+
+correlation matrix of the fit parameters:
+                a      b      c      d      
+a               1.000 
+b              -0.186  1.000 
+c              -0.685  0.442  1.000 
+d               0.470 -0.778 -0.871  1.000 
+
+
+*******************************************************************************
+Tue Sep 16 19:37:28 2025
+
+
+FIT:    data read from "datos.txt" using 1:2
+        format = x:z
+        x range restricted to [-5.25000 : 0.250000]
+        #datapoints = 3
+        residuals are weighted equally (unit weight)
+
+function used for fitting: f(x)
+	f(x) = a0 + a1*x + a2*x**2 + a3*x**3
+fitted parameters initialized with current variable values
+
+BREAK: Number of data points smaller than number of parameters
+
+*******************************************************************************
+Tue Sep 16 19:37:41 2025
+
+
+FIT:    data read from "datos.txt" using 1:2
+        format = x:z
+        x range restricted to [-5.25000 : 0.250000]
+        #datapoints = 3
+        residuals are weighted equally (unit weight)
+
+function used for fitting: f(x)
+	f(x) = a0 + a1*x + a2*x**2 + a3*x**3
+fitted parameters initialized with current variable values
+
+BREAK: Number of data points smaller than number of parameters
