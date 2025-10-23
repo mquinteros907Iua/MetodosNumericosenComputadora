@@ -1,0 +1,55 @@
+# ================================================================
+# Script Gnuplot: Diferenciación Numérica (adelante / atrás / centrada)
+# Compatible con versiones antiguas y nuevas
+# ================================================================
+
+set terminal pngcairo size 900,650 enhanced font "Arial,12"
+set output "grafico_diferenciacion.png"
+
+set grid
+set xlabel "x"
+set ylabel "f'(x) aproximada"
+set title "Diferenciación Numérica - Derivadas Aproximadas"
+
+# --------------------------
+# Ejes en X=0 y Y=0
+# --------------------------
+set xzeroaxis lw 2 lc rgb "black"
+set yzeroaxis lw 2 lc rgb "black"
+
+# --------------------------
+# Determinar rangos manuales o automáticos
+# --------------------------
+if (exists("STATS_min") == 0) {
+    stats "datos.txt" using 1 name "X" nooutput
+    stats "datos.txt" using 2 name "Y" nooutput
+    Xmin = X_min
+    Xmax = X_max
+    Ymin = Y_min
+    Ymax = Y_max
+}
+
+dx = (Xmax - Xmin) * 0.1
+dy = (Ymax - Ymin) * 0.1
+set xrange [Xmin - dx : Xmax + dx]
+set yrange [Ymin - dy : Ymax + dy]
+
+# --------------------------
+# Derivada exacta (editar según f)
+# --------------------------
+# f(x) = x^3  →  f'(x) = 3x^2
+f1_exacta(x) = 3*x**2
+comparar = 1   # 1 = comparar con derivada exacta, 0 = solo puntos numéricos
+
+# --------------------------
+# Graficar
+# --------------------------
+if (comparar) {
+    plot "datos.txt" using 1:2 with points pt 7 ps 1.5 lc rgb "red" title "Derivada Numérica", \
+         f1_exacta(x) with lines lw 2 lc rgb "blue" title "Derivada Exacta f'(x)"
+} else {
+    plot "datos.txt" using 1:2 with linespoints pt 7 ps 1.5 lw 2 lc rgb "red" title "Derivada Numérica"
+}
+
+set output
+
